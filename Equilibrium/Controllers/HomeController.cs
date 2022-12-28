@@ -1,4 +1,6 @@
-﻿using Equilibrium.Models;
+﻿using Equilibrium.Components;
+using Equilibrium.Components.OperationResult;
+using Equilibrium.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,11 +17,12 @@ namespace Equilibrium.Controllers
 
         public IActionResult Index(string m)
         {
-            if (m != "davide")
+            if (string.IsNullOrEmpty(m))
             {
-                throw new UnauthorizedAccessException("Password errata.");
+                return OperationResult.Failure($"{nameof(m)} is not valid.");
             }
-            return View();
+
+            return OperationResult.Success(m);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
