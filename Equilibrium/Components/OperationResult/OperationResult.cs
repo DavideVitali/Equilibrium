@@ -13,9 +13,9 @@ namespace Equilibrium.Components.OperationResult
     /// </summary>
     public class OperationResult : IActionResult
     {
-        private bool succeeded = false;
-        private IEnumerable<string>? errors;
-        private object? resultObject;
+        private readonly bool succeeded = false;
+        private readonly IEnumerable<string>? errors;
+        private readonly object? resultObject;
 
         /// <summary>
         /// Check whether the operation was successful.

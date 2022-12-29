@@ -1,7 +1,11 @@
+using Equilibrium.Models.Repositories.Entities;
+using Equilibrium.Models.Repositories.Stores;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IRepository<Employee>, Employees>();
 
 var app = builder.Build();
 
