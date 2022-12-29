@@ -3,6 +3,7 @@ using Equilibrium.Components.OperationResult;
 using Equilibrium.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Equilibrium.Controllers
 {
@@ -15,14 +16,9 @@ namespace Equilibrium.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(string m)
+        public IActionResult Index()
         {
-            if (string.IsNullOrEmpty(m))
-            {
-                return OperationResult.Failure($"{nameof(m)} is not valid.");
-            }
-
-            return OperationResult.Success(m);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -30,5 +26,13 @@ namespace Equilibrium.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+    }
+
+    public class militare
+    {
+        public Guid id { get; set; }
+        public string Name { get; set; }
+        public string Rank { get; set; }
+
     }
 }

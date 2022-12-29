@@ -2,6 +2,8 @@
 using System.Data.SqlTypes;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Equilibrium.Components.OperationResult
 { 
@@ -18,25 +20,19 @@ namespace Equilibrium.Components.OperationResult
         /// <summary>
         /// Check whether the operation was successful.
         /// </summary>
-        internal bool Succeeded => succeeded;
+        public bool Succeeded => succeeded;
         
         /// <summary>
         /// Get a list of errors in case of operation failure.
         /// </summary>
-        internal IEnumerable<string> Errors 
-        {
-            get
-            {
-                return errors ?? new List<string>();
-            }
-        }
+        public IEnumerable<string> Errors => errors ?? new List<string>();
 
         /// <summary>
         /// Get the underlying object result of the operation.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        internal T? FromResult<T>() => (T?)resultObject;
+        public object? ResultObject => resultObject;
 
         private OperationResult(bool succeeded, object? resultObject = null, IEnumerable<string>? errors = null)
         {
@@ -49,7 +45,7 @@ namespace Equilibrium.Components.OperationResult
         /// Returns a successful operation without further details.
         /// </summary>
         /// <returns></returns>
-        internal static OperationResult Success()
+        public static OperationResult Success()
         {
             return new OperationResult(true);
         }
@@ -59,7 +55,7 @@ namespace Equilibrium.Components.OperationResult
         /// </summary>
         /// <param name="resultObject">The underlying object result of the operation.</param>
         /// <returns></returns>
-        internal static OperationResult Success(object? resultObject)
+        public static OperationResult Success(object? resultObject)
         {
             return new OperationResult(true, resultObject);
         }
@@ -69,7 +65,7 @@ namespace Equilibrium.Components.OperationResult
         /// </summary>
         /// <param name="error">The error message.</param>
         /// <returns></returns>
-        internal static OperationResult Failure(string error)
+        public static OperationResult Failure(string error)
         {
             IEnumerable<string> errors = new List<string> { error };
             return new OperationResult(false, null, errors);
@@ -80,21 +76,17 @@ namespace Equilibrium.Components.OperationResult
         /// </summary>
         /// <param name="errors">The error messages.</param>
         /// <returns></returns>
-        internal static OperationResult Failure(IEnumerable<string> errors)
+        public static OperationResult Failure(IEnumerable<string> errors)
         {
             return new OperationResult(false, null, errors);
         }
 
         public async Task ExecuteResultAsync(ActionContext context)
         {
-            var objectResult = new ObjectResult(_result.Exception ?? _result.Data)
-            {
-                StatusCode = _result.Exception != null
-                ? StatusCodes.Status500InternalServerError
-                : StatusCodes.Status200OK
-            };
+            context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
+            string jsonResult = JsonSerializer.Serialize(new OperationResult(succeeded, resultObject, errors));
 
-            await objectResult.ExecuteResultAsync(context);
+            await HttpResponseWritingExtensions.WriteAsync(context.HttpContext.Response, jsonResult);
         }
     }
 }
