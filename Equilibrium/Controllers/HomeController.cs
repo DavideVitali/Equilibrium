@@ -27,12 +27,4 @@ namespace Equilibrium.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-
-    public class militare
-    {
-        public Guid id { get; set; }
-        public string Name { get; set; }
-        public string Rank { get; set; }
-
-    }
 }
