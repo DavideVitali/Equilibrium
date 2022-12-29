@@ -6,16 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Equilibrium.Controllers
 {
-    public class TableController : Controller
+    public class SortableTableController : Controller
     {
         private readonly IRepository<Employee> employees;
 
-        public TableController(IRepository<Employee> repo)
+        public SortableTableController(IRepository<Employee> repo)
         {
             employees = repo;
         }
         public IActionResult Index()
         {
+            var model = employees.GetAll().ToList();
+
+            SortableTableFilter stf = new() {
+                FilterModel = new()
+                {
+                    
+                }
+            }
             return View(employees.GetAll());
         }
 

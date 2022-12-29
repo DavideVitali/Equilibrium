@@ -1,0 +1,42 @@
+﻿@using Equilibrium.Models.Repositories.Entities;
+@using Equilibrium.Models.Repositories.Stores;
+@using System.Globalization;
+@model IEnumerable<Employee>
+<script>
+    document.addEventListener('DOMContentLoaded', function (event) {
+        let sortableTable = document.querySelector('#sortable-table-employees');
+        Equilibrium.SortableTable.init({
+            target: sortableTable
+        });
+    });
+</script>
+
+<table 
+    id="sortable-table-employees" 
+    class="eq-sortable-table"
+    data-eq-sortable-table-options-data='@Url.Action("FilterEmployees", "Table");'>
+    <thead>
+        <tr>
+            <th data-eq-sortable-table-filter="FirstName,LastName" data-eq-sortable-table-sortable>Name</th>
+            <th data-eq-sortable-table-filter="Title" data-eq-sortable-table-sortable>Title</th>
+            <th data-eq-sortable-table-filter="Nationality">Nationality</th>
+            <th data-eq-sortable-table-filter="DateOfBirth" data-eq-sortable-table-sortable>Date Of Birth</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var employee in Model)
+        {
+            <tr>
+                <td>@employee.FirstName @employee.LastName</td>
+                <td>@employee.Title</td>
+                <td>@employee.Nationality</td>
+                <td>@employee.DateOfBirth.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<footer class="mt-4">
+    <small>
+        powered by <a href="https://fakerjs.dev/">Faker</a>
+    </small>
+</footer>

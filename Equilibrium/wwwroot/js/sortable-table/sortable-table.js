@@ -1,20 +1,21 @@
 ﻿Equilibrium.SortableTable = {
     init: function (options) {
-        this.target = new SortableTable(options)
+        let target = options.target;
+        console.log(target);
     },
     filter: function () {
-        console.log(this.target.source());
+        console.log(this.target.data());
     },
 };
 
 class SortableTable {
-    #source;
+    #options;
 
-    constructor(source) {
-        this.#source = source;
+    constructor(options) {
+        this.#options = options;
     };
 
-    source() {
-        return this.#source;
+    options() {
+        return this.#options;
     };
 }
