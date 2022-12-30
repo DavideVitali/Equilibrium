@@ -11,16 +11,35 @@
     });
 </script>
 
-<table 
+<div class="eq-sortable-wrapper">
+    <div class="eq-sortable-filters d-flex">
+        <label for="eq-sortable-prop-name">Name</label>
+        <select name="eq-sortable-prop-name" id="eq-sortable-prop-name">
+            <option value="null">All</option>
+        </select>
+        <label for="eq-sortable-prop-title">Title</label>
+        <select name="eq-sortable-prop-title" id="eq-sortable-prop-title">
+            <option value="null">All</option>
+        </select>
+        <label for="eq-sortable-prop-nationality">Nationality</label>
+        <select name="eq-sortable-prop-nationality" id="eq-sortable-prop-nationality">
+            <option value="null">All</option>
+        </select>
+        <label for="eq-sortable-prop-dateofbirth">Date Of Birth</label>
+        <select name="eq-sortable-prop-dateofbirth" id="eq-sortable-prop-dateofbirth">
+            <option value="null">All</option>
+        </select>
+        <button type="submit">Apply Filter</button>
+    </div>
+    <table 
     id="sortable-table-employees" 
-    class="eq-sortable-table"
     data-eq-sortable-options-data='@Url.Action("FilterEmployees", "Table");'>
     <thead>
         <tr>
-            <th data-eq-sortable-filter="FirstName,LastName" data-eq-sortable-sortable>Name</th>
-            <th data-eq-sortable-filter="Title" data-eq-sortable-sortable>Title</th>
-            <th data-eq-sortable-filter="Nationality">Nationality</th>
-            <th data-eq-sortable-filter="DateOfBirth" data-eq-sortable-sortable>Date Of Birth</th>
+            <th data-eq-sortable-prop="name" data-eq-sortable-sortable>Name</th>
+            <th data-eq-sortable-prop="title" data-eq-sortable-sortable>Title</th>
+            <th data-eq-sortable-prop="nationality">Nationality</th>
+            <th data-eq-sortable-prop="dateofbirth" data-eq-sortable-sortable>Date Of Birth</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +54,7 @@
         }
     </tbody>
 </table>
+</div>
 <footer class="mt-4">
     <small>
         powered by <a href="https://fakerjs.dev/">Faker</a>
