@@ -18,12 +18,12 @@ namespace Equilibrium.Controllers
         {
             var model = employees.GetAll().ToList();
 
-            SortableTableFilter stf = new() {
-                FilterModel = new()
-                {
+            //SortableTableFilter stf = new() {
+            //    FilterModel = new()
+            //    {
                     
-                }
-            }
+            //    }
+            //}
             return View(employees.GetAll());
         }
 

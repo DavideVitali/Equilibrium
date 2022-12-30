@@ -9,6 +9,6 @@ namespace Equilibrium.Components.SortableTable
         /// </summary>
         public string JsonDOMContainer { get; }
 
-        public static Dictionary<object, List<object>> CreateFilterModel();
+        //public static Dictionary<object, List<object>> CreateFilterModel();
     }
 }

@@ -14,13 +14,13 @@
 <table 
     id="sortable-table-employees" 
     class="eq-sortable-table"
-    data-eq-sortable-table-options-data='@Url.Action("FilterEmployees", "Table");'>
+    data-eq-sortable-options-data='@Url.Action("FilterEmployees", "Table");'>
     <thead>
         <tr>
-            <th data-eq-sortable-table-filter="FirstName,LastName" data-eq-sortable-table-sortable>Name</th>
-            <th data-eq-sortable-table-filter="Title" data-eq-sortable-table-sortable>Title</th>
-            <th data-eq-sortable-table-filter="Nationality">Nationality</th>
-            <th data-eq-sortable-table-filter="DateOfBirth" data-eq-sortable-table-sortable>Date Of Birth</th>
+            <th data-eq-sortable-filter="FirstName,LastName" data-eq-sortable-sortable>Name</th>
+            <th data-eq-sortable-filter="Title" data-eq-sortable-sortable>Title</th>
+            <th data-eq-sortable-filter="Nationality">Nationality</th>
+            <th data-eq-sortable-filter="DateOfBirth" data-eq-sortable-sortable>Date Of Birth</th>
         </tr>
     </thead>
     <tbody>
