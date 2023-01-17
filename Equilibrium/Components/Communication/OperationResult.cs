@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Equilibrium.Components.OperationResult
+namespace Equilibrium.Components.Communication
 { 
     /// <summary>
     /// This class acts mainly as a bridge between server and client to easily manage exceptions and

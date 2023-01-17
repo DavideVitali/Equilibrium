@@ -1,5 +1,5 @@
 ﻿using Equilibrium.Components;
-using Equilibrium.Components.OperationResult;
+using Equilibrium.Components.Communication;
 using Equilibrium.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
