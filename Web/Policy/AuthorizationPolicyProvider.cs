@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Options;
+using Equilibrium.Identity.ActionMapper;
 
 namespace Web.Policy
 {
