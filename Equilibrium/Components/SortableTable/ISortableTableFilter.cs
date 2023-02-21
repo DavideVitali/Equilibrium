@@ -12,7 +12,7 @@ namespace Equilibrium.Components.SortableTable
         /// <summary>
         /// Json DOM representing the fields selected as filter
         /// </summary>
-        public string JsonDOMContainer { get; }
+        public string SerializedTargetEntity { get; }
 
         Dictionary<string, IEnumerable<string>> FilterModel { get; }
 

@@ -14,6 +14,8 @@
 
         public DateTime DateOfBirth { get; }
 
+        public Employee() { }
+
         public Employee(Guid id, string firstName, string lastName, string title, Nationality nationality, DateTime dateOfBirth)
         {
             Id = id;
