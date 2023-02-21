@@ -1,7 +1,7 @@
 ﻿using Equilibrium.Identity.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Web.Identity
+namespace Equilibrium.Identity
 {
     public class IdentityContext : DbContext
     {
