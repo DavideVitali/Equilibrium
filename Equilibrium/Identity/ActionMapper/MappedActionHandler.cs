@@ -1,6 +1,10 @@
 ﻿using Equilibrium.Identity.Entities;
+using Equilibrium.Identity.Manager;
+using Equilibrium.Identity.Store;
+using Equilibrium.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +15,13 @@ namespace Equilibrium.Identity.ActionMapper
     internal class MappedActionHandler : AuthorizationHandler<MappedActionRequirement>
     {
         User user;
-        IContextUser ContextUser;
+        readonly IdentityManager _manager;
         IHttpContextAccessor ContextAccessor;
 
         /// <inheritdoc/>
-        public MappedActionHandler(IdentityManager identityManager, IContextUser contextUser, IHttpContextAccessor contextAccessor)
+        public MappedActionHandler(IdentityManager identityManager, IHttpContextAccessor contextAccessor)
         {
-            IdentityManager = identityManager;
-            ContextUser = contextUser;
+            _manager = identityManager;
             ContextAccessor = contextAccessor;
         }
 
@@ -27,7 +30,7 @@ namespace Equilibrium.Identity.ActionMapper
             AuthorizationHandlerContext context,
             MappedActionRequirement requirement)
         {
-            AccessGroup rootGroup = await IdentityManager.AccessGroup.FindByNameAsync("ROOT");
+            AccessGroup rootGroup = await _manager.AccessGroup.FindByNameAsync("ROOT");
             bool isRootUser = await IdentityManager.User.FindInAccessGroupAsync(ContextUser.ContextUserId, rootGroup) != null;
 
             if (requirement.MustBeMapped && !isRootUser)
