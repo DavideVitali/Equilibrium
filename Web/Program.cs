@@ -1,11 +1,10 @@
-using Web.Identity;
 using Microsoft.EntityFrameworkCore;
+using Equilibrium.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<IdentityContext>(options => options.UseSqlite());
 
 var app = builder.Build();
 
