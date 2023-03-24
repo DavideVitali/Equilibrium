@@ -20,17 +20,17 @@ namespace Equilibrium.Identity.Manager
         /// <summary>
         /// The Users manager.
         /// </summary>
-        public readonly UserManager UserManager;
+        public readonly UserManager Users;
 
         /// <summary>
         /// The AccessGroups manager.
         /// </summary>
-        public readonly AccessGroupManager AccessGroupManager;
+        public readonly AccessGroupManager AccessGroups;
 
         /// <summary>
         /// The ServerActionEntities manager.
         /// </summary>
-        public readonly ServerActionManager ServerActionManager;
+        public readonly ServerActionManager ServerActions;
 
         public IdentityManager(
             UserManager userManager,
@@ -38,9 +38,9 @@ namespace Equilibrium.Identity.Manager
             ServerActionManager serverActionManager
             )
         {
-            AccessGroupManager = accessGroupManager ?? throw new ArgumentNullException(nameof(accessGroupManager));
-            ServerActionManager = serverActionManager ?? throw new ArgumentNullException(nameof(serverActionManager));
-            UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            AccessGroups = accessGroupManager ?? throw new ArgumentNullException(nameof(accessGroupManager));
+            ServerActions = serverActionManager ?? throw new ArgumentNullException(nameof(serverActionManager));
+            Users = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
     }
 
@@ -82,26 +82,26 @@ namespace Equilibrium.Identity.Manager
         /// <summary>
         /// The Users manager.
         /// </summary>
-        public readonly TUserManager UserManager;
+        public readonly TUserManager Users;
 
         /// <summary>
         /// The AccessGroups manager.
         /// </summary>
-        public readonly TAccessGroupManager AccessGroupManager;
+        public readonly TAccessGroupManager AccessGroups;
 
         /// <summary>
         /// The ServerActionEntitier manager.
         /// </summary>
-        public readonly TServerActionManager ServerActionManager;
+        public readonly TServerActionManager ServerActions;
 
         public IdentityManager(
             TUserManager userManager, 
             TAccessGroupManager accessGroupManager, 
             TServerActionManager serverActionManager)
         {
-            AccessGroupManager = accessGroupManager ?? throw new ArgumentNullException(nameof(accessGroupManager));
-            ServerActionManager = serverActionManager ?? throw new ArgumentNullException(nameof(serverActionManager));
-            UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            AccessGroups = accessGroupManager ?? throw new ArgumentNullException(nameof(accessGroupManager));
+            ServerActions = serverActionManager ?? throw new ArgumentNullException(nameof(serverActionManager));
+            Users = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
     } 
 }
