@@ -108,7 +108,7 @@ namespace Equilibrium.Identity.Store
     /// <summary>
     /// Defines a contract for the AccessGroup base store.
     /// </summary>
-    /// <typeparam name="TAccessGroup">A concrete implementation of a class inheriting from <see cref="AccessGroup/>.</typeparam>
+    /// <typeparam name="TAccessGroup">A concrete implementation of a class inheriting from <see cref="AccessGroup"/>.</typeparam>
     /// <remarks>Inherit from this interface to add custom methods to the store.</remarks>
     public interface IAccessGroupStore<TAccessGroup> : IResourceStore<TAccessGroup> where TAccessGroup : AccessGroup
     {
