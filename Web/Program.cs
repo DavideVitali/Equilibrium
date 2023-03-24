@@ -1,10 +1,21 @@
 using Microsoft.EntityFrameworkCore;
-using Equilibrium.Identity;
+using Equilibrium.Identity.ActionMapper;
+using Microsoft.AspNetCore.Server.IISIntegration;
+using Microsoft.AspNetCore.Authorization;
+using Web.Policy;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+//builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
+
+// Custom policy provider
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+
+// default handler override
+builder.Services.AddTransient<IAuthorizationHandler, MappedActionHandler>();
 
 var app = builder.Build();
 
