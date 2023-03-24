@@ -1,6 +1,5 @@
 ﻿using Equilibrium.Resources;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Equilibrium.Identity.Entities
 {
