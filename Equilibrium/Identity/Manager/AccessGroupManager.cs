@@ -13,7 +13,7 @@ using static System.Formats.Asn1.AsnWriter;
 namespace Equilibrium.Identity.Manager
 {
     /// <summary>
-    /// Default implementation for the <see cref="UserManager{TStore, TContext}"/> base class.
+    /// Default implementation for the <see cref="AccessGroupManager{TAccessGroup, TStore, TContext}"/> base class.
     /// </summary>
     public sealed class AccessGroupManager : AccessGroupManager<AccessGroup, AccessGroupStore, IdentityContext>
     {
