@@ -3,6 +3,7 @@ using Equilibrium.Identity.Entities;
 using Equilibrium.Resources;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Net.Mime;
 
 namespace Equilibrium.Identity.Store
 {
@@ -63,6 +64,16 @@ namespace Equilibrium.Identity.Store
                 .FirstOrDefaultAsync();
         }
 
+        public override async Task<User> FindInAccessGroupsAsync(User user, IQueryable<AccessGroup> accessGroup, CancellationToken cancellationToken, bool deepSearch = false)
+        {
+            return await context.AccessGroups
+                .Where(ctxag => accessGroup.Any(ag => ag.Id == ctxag.Id))
+                .Include(e => e.Users)
+                .SelectMany(s => s.Users)
+                .Distinct()
+                .FirstOrDefaultAsync();
+        }
+
         public override IQueryable<User> GetCollection(CancellationToken cancellationToken)
         {
             return context.Users.AsQueryable<User>();
@@ -96,6 +107,7 @@ namespace Equilibrium.Identity.Store
         public abstract Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken);
         public abstract Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken);
         public abstract Task<TUser> FindInAccessGroupAsync(TUser user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
+        public abstract Task<TUser> FindInAccessGroupsAsync(TUser user, IQueryable<AccessGroup> accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
         public abstract IQueryable<TUser> GetCollection(CancellationToken cancellationToken);
         public abstract Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken);
     }
@@ -121,5 +133,15 @@ namespace Equilibrium.Identity.Store
         /// <param name="searchInParent">If <em>true</em>, performs a deep search (the correct implementation depends on the tree type).</param>
         /// <returns></returns>
         Task<TUser> FindInAccessGroupAsync(TUser user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
+
+        /// <summary>
+        /// Search the presence of a User within a collection of AccessGroups.
+        /// </summary>
+        /// <param name="user">The user to search for.</param>
+        /// <param name="accessGroup">The AccessGroups where the User is supposed to be found.</param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="searchInParent">If <em>true</em>, performs a deep search (the correct implementation depends on the tree type).</param>
+        /// <returns></returns>
+        Task<TUser> FindInAccessGroupsAsync(TUser user, IQueryable<AccessGroup> accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
     }
 }

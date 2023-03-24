@@ -42,6 +42,11 @@ namespace Equilibrium.Identity.Manager
             return await store.FindInAccessGroupAsync(user, accessGroup, cancellationToken, deepSearch);
         }
 
+        public override async Task<User> FindInAccessGroupsAsync(User user, IQueryable<AccessGroup> accessGroups, CancellationToken cancellationToken, bool deepSearch = false)
+        {
+            return await store.FindInAccessGroupsAsync(user, accessGroups, cancellationToken, deepSearch);
+        }
+
         public override IQueryable<User> GetCollection(CancellationToken cancellationToken)
         {
             return store.GetCollection(cancellationToken);
@@ -65,6 +70,7 @@ namespace Equilibrium.Identity.Manager
         public abstract Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken);
         public abstract Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken);
         public abstract Task<TUser> FindInAccessGroupAsync(TUser user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
+        public abstract Task<TUser> FindInAccessGroupsAsync(TUser user, IQueryable<AccessGroup> accessGroups, CancellationToken cancellationToken, bool deepSearch = false);
         public abstract IQueryable<TUser> GetCollection(CancellationToken cancellationToken);
         public abstract Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken);
     }

@@ -37,6 +37,13 @@ namespace Equilibrium.Identity.Manager
             return await store.FindByNameAsync(name, cancellationToken);
         }
 
+        public override IQueryable<AccessGroup> FindByServerActionEntity(ServerActionEntity serverAction, CancellationToken cancellationToken)
+        {
+            return store.GetCollection(cancellationToken)
+                .Include(ag => ag.Actions)
+                .Where(agse => agse.Actions.Any(se => se.Id == serverAction.Id));
+        }
+
         public override IQueryable<AccessGroup> GetCollection(CancellationToken cancellationToken)
         {
             return store.GetCollection(cancellationToken);
@@ -46,6 +53,7 @@ namespace Equilibrium.Identity.Manager
         {
             return await store.UpdateAsync(resource, cancellationToken);
         }
+
     }
 
     public abstract class AccessGroupManager<TAccessGroup, TStore, TContext> : ManagerBase<TStore, TContext>, IAccessGroupStore<TAccessGroup>
@@ -54,19 +62,13 @@ namespace Equilibrium.Identity.Manager
         where TContext : DbContext
     {
         public AccessGroupManager(TStore store, CancellationToken cancellationToken = default) : base(store, cancellationToken) { }
-
         public abstract bool HasRecords { get; }
-
         public abstract Task<OperationResult> CreateAsync(TAccessGroup resource, CancellationToken cancellationToken);
-
         public abstract Task<OperationResult> DeleteAsync(TAccessGroup resource, CancellationToken cancellationToken);
-
         public abstract Task<TAccessGroup> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-
         public abstract Task<TAccessGroup> FindByNameAsync(string name, CancellationToken cancellationToken);
-
+        public abstract IQueryable<TAccessGroup> FindByServerActionEntity(ServerActionEntity serverAction, CancellationToken cancellation);
         public abstract IQueryable<TAccessGroup> GetCollection(CancellationToken cancellationToken);
-
         public abstract Task<OperationResult> UpdateAsync(TAccessGroup resource, CancellationToken cancellationToken);
     }
 }

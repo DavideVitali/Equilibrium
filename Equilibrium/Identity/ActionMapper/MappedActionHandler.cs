@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace Equilibrium.Identity.ActionMapper
 {
-    internal class MappedActionHandler : AuthorizationHandler<MappedActionRequirement>
+    public class MappedActionHandler : AuthorizationHandler<MappedActionRequirement>
     {
         User user;
         readonly IdentityManager _manager;
-        IHttpContextAccessor ContextAccessor;
+        IHttpContextAccessor _context;
 
         /// <inheritdoc/>
         public MappedActionHandler(IdentityManager identityManager, IHttpContextAccessor contextAccessor)
         {
             _manager = identityManager;
-            ContextAccessor = contextAccessor;
+            _context = contextAccessor;
         }
 
         /// <inheritdoc/>
@@ -30,26 +30,47 @@ namespace Equilibrium.Identity.ActionMapper
             AuthorizationHandlerContext context,
             MappedActionRequirement requirement)
         {
-            AccessGroup rootGroup = await _manager.AccessGroup.FindByNameAsync("ROOT");
-            bool isRootUser = await IdentityManager.User.FindInAccessGroupAsync(ContextUser.ContextUserId, rootGroup) != null;
+            HttpContext? ctx = _context.HttpContext;
+            if (ctx == null)
+            {
+                context.Fail();
+                return;
+            }
+
+            if (ctx.User.Identity == null || !ctx.User.Identity.IsAuthenticated) 
+            {
+                context.Fail();
+                return;
+            }
+
+            string userName = ctx.User.Identity!.Name!;
+            AccessGroup rootGroup = await _manager.AccessGroups.FindByNameAsync("ROOT", CancellationToken.None);
+            User connectedUser = await _manager.Users.FindByNameAsync(userName, CancellationToken.None);
+            if (connectedUser == null)
+            {
+                context.Fail();
+                return;
+            }
+
+            bool isRootUser = await _manager.Users.FindInAccessGroupAsync(connectedUser, rootGroup, CancellationToken.None) != null;
 
             if (requirement.MustBeMapped && !isRootUser)
             {
-                string applicationName = (string)ContextAccessor.HttpContext.Request.RouteValues["Area"];
-                string entryPoint = (string)ContextAccessor.HttpContext.Request.RouteValues["Controller"];
-                string action = (string)ContextAccessor.HttpContext.Request.RouteValues["Action"];
-                string method = ContextAccessor.HttpContext.Request.Method;
+                string applicationName = ctx.Request.RouteValues["Area"] as string ?? throw new ArgumentNullException("Area route value can't be null.");
+                string entryPoint = ctx.Request.RouteValues["Controller"] as string ?? throw new ArgumentNullException("Controller route value can't be null.");
+                string action = ctx.Request.RouteValues["Action"] as string ?? throw new ArgumentNullException("Action route value can't be null");
+                string method = ctx.Request.Method;
 
                 string requestedAction = $"{applicationName}.{entryPoint}.{action}[{method}]";
-                ServerActionEntity serverAction = await IdentityManager.Action.FindByNameAsync(requestedAction);
+                ServerActionEntity serverAction = await _manager.ServerActions.FindByNameAsync(requestedAction, CancellationToken.None);
 
                 if (serverAction != null)
                 {
-                    IQueryable<AccessGroup> accessGroups = IdentityManager.AccessGroup.FindByServerActionEntity(serverAction);
+                    IQueryable<AccessGroup> accessGroups = _manager.AccessGroups.FindByServerActionEntity(serverAction, CancellationToken.None);
 
                     if (accessGroups?.Count() > 0)
                     {
-                        User user = await IdentityManager.User.FindInAccessGroupAsync(ContextUser.ContextUserId, accessGroups, true);
+                        User user = await _manager.Users.FindInAccessGroupsAsync(connectedUser, accessGroups, CancellationToken.None);
 
                         if (user != null)
                         {
