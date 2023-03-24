@@ -8,7 +8,7 @@
     public interface IReadOnlyResourceStore<TResource, TKey> : IDisposable
     {
         /// <summary>
-        /// Find the resource through its Id.
+        /// Find the resource by its Id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
@@ -16,7 +16,7 @@
         Task<TResource> FindByIdAsync(TKey id, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Find the resource through its Name.
+        /// Find the resource by its Name.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="cancellationToken"></param>
