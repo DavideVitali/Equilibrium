@@ -2,6 +2,7 @@
 using Equilibrium.Identity.Entities;
 using Equilibrium.Resources;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Equilibrium.Identity.Store
 {
@@ -52,6 +53,16 @@ namespace Equilibrium.Identity.Store
             return await context.Users.FirstOrDefaultAsync(u => u.Name == name);
         }
 
+        public override async Task<User> FindInAccessGroupAsync(User user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false)
+        {
+            return await context
+                .Users
+                .Where(u => u.Id == user.Id)
+                .Include(u => u.AccessGroups)
+                .Where(uag => uag.AccessGroups.Any(ag => ag.Id == accessGroup.Id))
+                .FirstOrDefaultAsync();
+        }
+
         public override IQueryable<User> GetCollection(CancellationToken cancellationToken)
         {
             return context.Users.AsQueryable<User>();
@@ -79,19 +90,13 @@ namespace Equilibrium.Identity.Store
         where TContext : DbContext
     {
         public UserStore(TContext ctx) : base(ctx) { }
-
         public abstract bool HasRecords { get; }
-
         public abstract Task<OperationResult> CreateAsync(TUser resource, CancellationToken cancellationToken);
-
         public abstract Task<OperationResult> DeleteAsync(TUser resource, CancellationToken cancellationToken);
-
         public abstract Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-
         public abstract Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken);
-
+        public abstract Task<TUser> FindInAccessGroupAsync(TUser user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
         public abstract IQueryable<TUser> GetCollection(CancellationToken cancellationToken);
-
         public abstract Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken);
     }
 
@@ -107,6 +112,14 @@ namespace Equilibrium.Identity.Store
     /// <remarks>Inherit from this interface to add custom methods to the store.</remarks>
     public interface IUserStore<TUser> : IResourceStore<TUser> where TUser : User 
     {
-
+        /// <summary>
+        /// Search the presence of a User in an AccessGroup.
+        /// </summary>
+        /// <param name="user">The user to search for.</param>
+        /// <param name="accessGroup">The AccessGroup where the User is supposed to be found.</param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="searchInParent">If <em>true</em>, performs a deep search (the correct implementation depends on the tree type).</param>
+        /// <returns></returns>
+        Task<TUser> FindInAccessGroupAsync(TUser user, AccessGroup accessGroup, CancellationToken cancellationToken, bool deepSearch = false);
     }
 }
