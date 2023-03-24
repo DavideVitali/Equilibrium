@@ -11,19 +11,19 @@ using System.Threading.Tasks;
 namespace Equilibrium.Identity.Store
 {
     /// <summary>
-    /// Default implementation of the User Store.
+    /// Default implementation of the AccessGroup Store.
     /// </summary>
     public class AccessGroupStore : AccessGroupStore<AccessGroup, IdentityContext>
     {
-        public UserStore(IdentityContext ctx) : base(ctx) { }
+        public AccessGroupStore(IdentityContext ctx) : base(ctx) { }
 
         public override bool HasRecords => context.Users.Any();
 
-        public override async Task<OperationResult> CreateAsync(User resource, CancellationToken cancellationToken)
+        public override async Task<OperationResult> CreateAsync(AccessGroup resource, CancellationToken cancellationToken)
         {
             try
             {
-                context.Users.Add(resource);
+                context.AccessGroups.Add(resource);
                 await context.SaveChangesAsync();
                 return OperationResult.Success(resource);
             }
@@ -33,11 +33,11 @@ namespace Equilibrium.Identity.Store
             }
         }
 
-        public override async Task<OperationResult> DeleteAsync(User resource, CancellationToken cancellationToken)
+        public override async Task<OperationResult> DeleteAsync(AccessGroup resource, CancellationToken cancellationToken)
         {
             try
             {
-                context.Users.Remove(resource);
+                context.AccessGroups.Remove(resource);
                 await context.SaveChangesAsync();
                 return OperationResult.Success();
             }
@@ -47,26 +47,26 @@ namespace Equilibrium.Identity.Store
             }
         }
 
-        public override async Task<User> FindByIdAsync(Guid id, CancellationToken cancellationToken)
+        public override async Task<AccessGroup> FindByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await context.Users.FindAsync(id, cancellationToken);
+            return await context.AccessGroups.FindAsync(id, cancellationToken);
         }
 
-        public override async Task<User> FindByNameAsync(string name, CancellationToken cancellationToken)
+        public override async Task<AccessGroup> FindByNameAsync(string name, CancellationToken cancellationToken)
         {
-            return await context.Users.FirstOrDefaultAsync(u => u.Name == name);
+            return await context.AccessGroups.FirstOrDefaultAsync(u => u.Name == name);
         }
 
-        public override IQueryable<User> GetCollection(CancellationToken cancellationToken)
+        public override IQueryable<AccessGroup> GetCollection(CancellationToken cancellationToken)
         {
-            return context.Users.AsQueryable<User>();
+            return context.AccessGroups.AsQueryable<AccessGroup>();
         }
 
-        public override async Task<OperationResult> UpdateAsync(User resource, CancellationToken cancellationToken)
+        public override async Task<OperationResult> UpdateAsync(AccessGroup resource, CancellationToken cancellationToken)
         {
             try
             {
-                context.Users.Update(resource);
+                context.AccessGroups.Update(resource);
                 await context.SaveChangesAsync();
                 return OperationResult.Success(resource);
             }
@@ -79,36 +79,36 @@ namespace Equilibrium.Identity.Store
 
     public abstract class AccessGroupStore<TAccessGroup, TContext> :
         StoreBase<TContext>,
-        IUserStore<TAccessGroup>
+        IAccessGroupStore<TAccessGroup>
         where TAccessGroup : AccessGroup
         where TContext : DbContext
     {
-        public UserStore(TContext ctx) : base(ctx) { }
+        public AccessGroupStore(TContext ctx) : base(ctx) { }
 
         public abstract bool HasRecords { get; }
 
-        public abstract Task<OperationResult> CreateAsync(TUser resource, CancellationToken cancellationToken);
+        public abstract Task<OperationResult> CreateAsync(TAccessGroup resource, CancellationToken cancellationToken);
 
-        public abstract Task<OperationResult> DeleteAsync(TUser resource, CancellationToken cancellationToken);
+        public abstract Task<OperationResult> DeleteAsync(TAccessGroup resource, CancellationToken cancellationToken);
 
-        public abstract Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken);
+        public abstract Task<TAccessGroup> FindByIdAsync(Guid id, CancellationToken cancellationToken);
 
-        public abstract Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken);
+        public abstract Task<TAccessGroup> FindByNameAsync(string name, CancellationToken cancellationToken);
 
-        public abstract IQueryable<TUser> GetCollection(CancellationToken cancellationToken);
+        public abstract IQueryable<TAccessGroup> GetCollection(CancellationToken cancellationToken);
 
-        public abstract Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken);
+        public abstract Task<OperationResult> UpdateAsync(TAccessGroup resource, CancellationToken cancellationToken);
     }
 
     /// <summary>
-    /// Defines the default contract for the User IdentityStore base store.
+    /// Defines the default contract for the AccessGroup base store.
     /// </summary>
     public interface IAccessGroupStore : IAccessGroupStore<AccessGroup> { }
 
     /// <summary>
-    /// Defines a contract for the User IdentityStore base store.
+    /// Defines a contract for the AccessGroup base store.
     /// </summary>
-    /// <typeparam name="TUser">A concrete implementation of a class inheriting from <see cref="User"/>.</typeparam>
+    /// <typeparam name="TAccessGroup">A concrete implementation of a class inheriting from <see cref="AccessGroup/>.</typeparam>
     /// <remarks>Inherit from this interface to add custom methods to the store.</remarks>
     public interface IAccessGroupStore<TAccessGroup> : IResourceStore<TAccessGroup> where TAccessGroup : AccessGroup
     {
