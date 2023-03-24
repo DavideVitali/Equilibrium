@@ -5,62 +5,114 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Equilibrium.Identity.Store
 {
-    public class UserStore : UserStore<User>
+    /// <summary>
+    /// Default implementation of the User Store.
+    /// </summary>
+    public class UserStore : UserStore<User, IdentityContext>
     {
-        public UserStore(IdentityContext ctx) : base(ctx)
+        public UserStore(IdentityContext ctx) : base(ctx) { }
+
+        public override bool HasRecords => context.Users.Any();
+
+        public override async Task<OperationResult> CreateAsync(User resource, CancellationToken cancellationToken)
         {
+            try
+            {
+                context.Users.Add(resource);
+                await context.SaveChangesAsync();
+                return OperationResult.Success(resource);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure(ex.Message);
+            }
+        }
+
+        public override async Task<OperationResult> DeleteAsync(User resource, CancellationToken cancellationToken)
+        {
+            try
+            {
+                context.Users.Remove(resource);
+                await context.SaveChangesAsync();
+                return OperationResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure(ex.Message);
+            }
+        }
+
+        public override async Task<User> FindByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await context.Users.FindAsync(id, cancellationToken);
+        }
+
+        public override async Task<User> FindByNameAsync(string name, CancellationToken cancellationToken)
+        {
+            return await context.Users.FirstOrDefaultAsync(u => u.Name == name);
+        }
+
+        public override IQueryable<User> GetCollection(CancellationToken cancellationToken)
+        {
+            return context.Users.AsQueryable<User>();
+        }
+
+        public override async Task<OperationResult> UpdateAsync(User resource, CancellationToken cancellationToken)
+        {
+            try
+            {
+                context.Users.Update(resource);
+                await context.SaveChangesAsync();
+                return OperationResult.Success(resource);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure(ex.Message);
+            }
         }
     }
 
-    // TODO: Implement default CRUD methods
-    public class UserStore<TUser> :
-        StoreBase<DbContext>,
-        IIdentityStore<TUser> where TUser : User
+    public abstract class UserStore<TUser, TContext> :
+        StoreBase<TContext>,
+        IIdentityStore<TUser> 
+        where TUser : User
+        where TContext : DbContext
     {
-        public UserStore(DbContext ctx) : base(ctx)
-        {
-        }
+        public UserStore(TContext ctx) : base(ctx) { }
 
-        public bool HasRecords => throw new NotImplementedException();
+        public abstract bool HasRecords { get; }
 
-        public Task<OperationResult> CreateAsync(TUser resource, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<OperationResult> CreateAsync(TUser resource, CancellationToken cancellationToken);
 
-        public Task<OperationResult> DeleteAsync(TUser resource, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<OperationResult> DeleteAsync(TUser resource, CancellationToken cancellationToken);
 
-        public Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<TUser> FindByIdAsync(Guid id, CancellationToken cancellationToken);
 
-        public Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<TUser> FindByNameAsync(string name, CancellationToken cancellationToken);
 
-        public IQueryable<TUser> GetCollection(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract IQueryable<TUser> GetCollection(CancellationToken cancellationToken);
 
-        public Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract Task<OperationResult> UpdateAsync(TUser resource, CancellationToken cancellationToken);
     }
 
+    /// <summary>
+    /// Defines the default contract for the User IdentityStore base store.
+    /// </summary>
     public interface IIdentityStore : IIdentityStore<User> { }
 
+    /// <summary>
+    /// Defines a contract for the User IdentityStore base store.
+    /// </summary>
+    /// <typeparam name="TUser">A concrete implementation of a class inheriting from <see cref="User"/>.</typeparam>
+    /// <remarks>Inherit from this interface to add custom methods to the store.</remarks>
     public interface IIdentityStore<TUser> : IResourceStore<TUser> where TUser : User 
     {
 
