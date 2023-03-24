@@ -82,7 +82,7 @@ namespace Equilibrium.Identity.Store
 
     public abstract class UserStore<TUser, TContext> :
         StoreBase<TContext>,
-        IIdentityStore<TUser> 
+        IUserStore<TUser> 
         where TUser : User
         where TContext : DbContext
     {
@@ -106,14 +106,14 @@ namespace Equilibrium.Identity.Store
     /// <summary>
     /// Defines the default contract for the User IdentityStore base store.
     /// </summary>
-    public interface IIdentityStore : IIdentityStore<User> { }
+    public interface IUserStore : IUserStore<User> { }
 
     /// <summary>
     /// Defines a contract for the User IdentityStore base store.
     /// </summary>
     /// <typeparam name="TUser">A concrete implementation of a class inheriting from <see cref="User"/>.</typeparam>
     /// <remarks>Inherit from this interface to add custom methods to the store.</remarks>
-    public interface IIdentityStore<TUser> : IResourceStore<TUser> where TUser : User 
+    public interface IUserStore<TUser> : IResourceStore<TUser> where TUser : User 
     {
 
     }
