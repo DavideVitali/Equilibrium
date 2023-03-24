@@ -53,7 +53,7 @@ namespace Equilibrium.Identity.Manager
         }
     }
 
-    public abstract class UserManager<TStore, TContext> : ManagerBase<TStore, TContext>, IIdentityStore<User>
+    public abstract class UserManager<TStore, TContext> : ManagerBase<TStore, TContext>, IUserStore<User>
         where TStore : StoreBase<TContext>
         where TContext : DbContext
     {
@@ -74,7 +74,7 @@ namespace Equilibrium.Identity.Manager
         public abstract Task<OperationResult> UpdateAsync(User resource, CancellationToken cancellationToken);
     }
 
-    public abstract class UserManager<TUser, TStore, TContext> : ManagerBase<TStore, TContext>, IIdentityStore<TUser>
+    public abstract class UserManager<TUser, TStore, TContext> : ManagerBase<TStore, TContext>, IUserStore<TUser>
         where TUser : User
         where TStore : StoreBase<TContext>
         where TContext : DbContext
