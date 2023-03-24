@@ -14,7 +14,7 @@ namespace Equilibrium.Identity.Manager
     /// <summary>
     /// Default implementation for the <see cref="UserManager{TStore, TContext}"/> base class.
     /// </summary>
-    public sealed class UserManager : UserManager<UserStore, DbContext>
+    public sealed class UserManager : UserManager<User, UserStore, IdentityContext>
     {
         public UserManager(UserStore store, CancellationToken cancellationToken = default) : base(store, cancellationToken)
         {
@@ -51,27 +51,6 @@ namespace Equilibrium.Identity.Manager
         {
             return await store.UpdateAsync(resource, cancellationToken);
         }
-    }
-
-    public abstract class UserManager<TStore, TContext> : ManagerBase<TStore, TContext>, IUserStore<User>
-        where TStore : StoreBase<TContext>
-        where TContext : DbContext
-    {
-        public UserManager(TStore store, CancellationToken cancellationToken = default) : base(store, cancellationToken) { }
-
-        public abstract bool HasRecords { get; }
-
-        public abstract Task<OperationResult> CreateAsync(User resource, CancellationToken cancellationToken);
-
-        public abstract Task<OperationResult> DeleteAsync(User resource, CancellationToken cancellationToken);
-
-        public abstract Task<User> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-
-        public abstract Task<User> FindByNameAsync(string name, CancellationToken cancellationToken);
-
-        public abstract IQueryable<User> GetCollection(CancellationToken cancellationToken);
-
-        public abstract Task<OperationResult> UpdateAsync(User resource, CancellationToken cancellationToken);
     }
 
     public abstract class UserManager<TUser, TStore, TContext> : ManagerBase<TStore, TContext>, IUserStore<TUser>
