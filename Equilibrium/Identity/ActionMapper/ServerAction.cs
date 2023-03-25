@@ -10,16 +10,23 @@
         /// <summary>
         /// Full name of the action method in the form Area.Controller.Action
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         /// Action description
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; }
 
         /// <summary>
         /// HTTP method
         /// </summary>
-        public bool IsHttpPost { get; set; }
+        public bool IsHttpPost { get; }
+
+        public ServerAction(string name, string description, bool isHttpPost)
+        {
+            Name = name;
+            Description = description;
+            IsHttpPost = isHttpPost;
+        }
     }
 }

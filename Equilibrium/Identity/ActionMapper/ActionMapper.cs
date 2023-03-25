@@ -23,12 +23,11 @@ namespace Equilibrium.Identity.ActionMapper
                 {
                     bool isHttpPost = mappedAction.EndpointMetadata.Any(c => c.GetType() == typeof(HttpPostAttribute));
                     string httpPostIdentifier = isHttpPost ? "POST" : "GET";
-                    ServerAction action = new ServerAction
-                    {
-                        Description = ((ActionMapAttribute)actionMapAttribute).Description,
-                        Name = $"{mappedAction.RouteValues["area"]}.{mappedAction.RouteValues["controller"]}.{mappedAction.RouteValues["action"]}[{httpPostIdentifier}]",
-                        IsHttpPost = isHttpPost
-                    };
+                    ServerAction action = new ServerAction(
+                        $"{mappedAction.RouteValues["area"]}.{mappedAction.RouteValues["controller"]}.{mappedAction.RouteValues["action"]}[{httpPostIdentifier}]",
+                        ((ActionMapAttribute)actionMapAttribute).Description,
+                        isHttpPost
+                    );
 
                     ServerActions.Add(action);
                 }
