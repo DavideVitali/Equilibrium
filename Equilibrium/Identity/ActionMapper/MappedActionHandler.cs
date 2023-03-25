@@ -14,7 +14,6 @@ namespace Equilibrium.Identity.ActionMapper
 {
     public class MappedActionHandler : AuthorizationHandler<MappedActionRequirement>
     {
-        User user;
         readonly IdentityManager _manager;
         IHttpContextAccessor _context;
 
@@ -52,6 +51,12 @@ namespace Equilibrium.Identity.ActionMapper
                 return;
             }
 
+            // TODO: Performance check.
+            /**
+            Checking just to see if a user is a root user might degrade
+            performance, based on how the access group tree is made 
+            (if there's any!)
+            */
             bool isRootUser = await _manager.Users.FindInAccessGroupAsync(connectedUser, rootGroup, CancellationToken.None) != null;
 
             if (requirement.MustBeMapped && !isRootUser)
