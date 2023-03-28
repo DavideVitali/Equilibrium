@@ -2,20 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using Equilibrium.Identity.ActionMapper;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.AspNetCore.Authorization;
-using Web.Policy;
+using Equilibrium.Identity.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpContextAccessor();
-//builder.Services.AddAuthentication(IISDefaults.AuthenticationScheme);
 
-// Custom policy provider
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
-
-// default handler override
-builder.Services.AddTransient<IAuthorizationHandler, MappedActionHandler>();
+builder.Services.AddEquilibrium();
 
 var app = builder.Build();
 
@@ -32,7 +26,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseEquilibrium();
 
 app.MapControllerRoute(
     name: "default",

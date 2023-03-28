@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Equilibrium.Identity.ActionMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.Extensions.Options;
-using Equilibrium.Identity.ActionMapper;
 
-namespace Web.Policy
+namespace Equilibrium.Identity.Policy
 {
     /// <summary>
     /// Custom policy provider.
