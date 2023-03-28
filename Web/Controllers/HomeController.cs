@@ -16,7 +16,7 @@ namespace Web.Controllers
             _logger = logger;
         }
 
-        [ActionMap(Description = "Your first policy rule")]
+        [ActionMap(("Your first policy rule"))]
         public IActionResult Index()
         {
             return View();
